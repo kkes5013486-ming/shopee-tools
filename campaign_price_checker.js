@@ -17,8 +17,8 @@ function track(action){
     let u=localStorage.cpc_uid;
     if(!u){u=(crypto.randomUUID?crypto.randomUUID():Date.now()+"_"+Math.random());localStorage.cpc_uid=u;}
     const d=new URLSearchParams();
-    d.append("entry.1835367255","campaign_price_checker");
-    d.append("entry.145005153",action);
+    d.append("entry.145005153","campaign_price_checker");
+    d.append("entry.1835367255",action);
     d.append("entry.2001185629",u);
     navigator.sendBeacon?navigator.sendBeacon(TF,d):fetch(TF,{method:"POST",mode:"no-cors",body:d});
   }catch(_){}
