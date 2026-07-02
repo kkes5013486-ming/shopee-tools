@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>活動價格檢查工具 — 安裝與使用說明</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --red:#ee4d2d;
+    --red-light:#fff3f0;
+    --dark:#1a1a1a;
+    --mid:#555;
+    --soft:#888;
+    --line:#e8e8e8;
+    --bg:#f9f9f9;
+    --white:#fff;
+    --green:#168038;
+    --green-bg:#e8f5e9;
+    --yellow:#f0a500;
+    --yellow-bg:#fff8e1;
+  }
+  body{font-family:"Helvetica Neue",Arial,"PingFang TC","Microsoft JhengHei",sans-serif;color:var(--dark);background:var(--white);line-height:1.7;font-size:15px}
+
+  /* Hero */
+  .hero{background:var(--dark);color:var(--white);padding:28px 24px 24px;text-align:center}
+  .hero h1{font-size:clamp(22px,5vw,34px);font-weight:800;letter-spacing:-.02em;margin-bottom:8px;line-height:1.2}
+  .hero h1 span{color:var(--red)}
+  .hero p{font-size:14px;color:#aaa;max-width:560px;margin:0 auto}
+
+  /* Pain */
+  .pain{background:var(--red-light);border-left:4px solid var(--red);padding:20px 24px;margin:32px auto;max-width:760px;border-radius:0 8px 8px 0}
+  .pain h2{font-size:14px;font-weight:700;color:var(--red);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em}
+  .pain p{font-size:14px;color:var(--mid);line-height:1.7}
+
+  /* Main content */
+  .container{max-width:760px;margin:0 auto;padding:0 24px 64px}
+
+  /* Section */
+  .section{margin-top:48px}
+  .section-label{font-size:11px;font-weight:700;color:var(--red);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+  .section h2{font-size:22px;font-weight:800;color:var(--dark);margin-bottom:20px;letter-spacing:-.01em}
+
+  /* Steps */
+  .steps{display:flex;flex-direction:column;gap:0}
+  .step{display:flex;gap:20px;padding:20px 0;border-bottom:1px solid var(--line)}
+  .step:last-child{border-bottom:none}
+  .step-num{flex-shrink:0;width:36px;height:36px;background:var(--red);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;margin-top:2px}
+  .step-content h3{font-size:15px;font-weight:700;margin-bottom:6px;color:var(--dark)}
+  .step-content p{font-size:14px;color:var(--mid);line-height:1.7}
+  .step-content code{background:#f0f0f0;padding:2px 7px;border-radius:4px;font-size:13px;font-family:monospace;color:var(--dark)}
+
+  /* Bookmark code block */
+  .code-block{background:var(--dark);border-radius:10px;padding:16px 18px;margin:12px 0;position:relative}
+  .code-block code{color:#7dd3fc;font-size:12px;font-family:monospace;word-break:break-all;line-height:1.6;display:block}
+  .copy-hint{font-size:11px;color:#666;margin-top:8px}
+
+  /* Warning / tip */
+  .tip{background:#fffbea;border:1px solid #f0d060;border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13px;color:#7a5c00}
+  .tip b{color:#5a3e00}
+  .warn{background:#fff3f0;border:1px solid #f9c0b0;border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13px;color:#8b2200}
+
+  /* Level table */
+  .level-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}
+  .level-table th{text-align:left;padding:10px 12px;background:var(--bg);font-size:12px;font-weight:700;color:var(--soft);border-bottom:2px solid var(--line)}
+  .level-table td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  .level-table tr:last-child td{border-bottom:none}
+  .lv1{background:#e8f5e9;color:#168038;font-weight:700;border-radius:4px;padding:2px 8px;white-space:nowrap}
+  .lv2{background:#fff8e1;color:#f0a500;font-weight:700;border-radius:4px;padding:2px 8px;white-space:nowrap}
+  .lv3{background:#ffebee;color:#d93025;font-weight:700;border-radius:4px;padding:2px 8px;white-space:nowrap}
+  .lv4{background:#f5f5f5;color:#555;font-weight:700;border-radius:4px;padding:2px 8px;white-space:nowrap}
+
+  /* UI mockup */
+  .mockup{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:20px;margin:16px 0}
+  .mockup-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px}
+  .mockup-col label{font-size:11px;font-weight:700;color:var(--soft);display:block;margin-bottom:4px}
+  .mockup-ta{border:1px solid var(--line);border-radius:6px;padding:8px;font-size:12px;color:var(--mid);font-family:monospace;background:var(--white);height:72px;width:100%}
+  .mockup-dates{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+  .mockup-date-input{border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--mid);background:var(--white)}
+  .mockup-btn{background:var(--red);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:700;cursor:default}
+  .mockup-result{margin-top:12px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+  .mockup-result-row{display:flex;gap:0;font-size:12px}
+  .mockup-result-row.header{background:var(--bg);font-weight:700;font-size:11px;color:var(--soft)}
+  .mockup-result-row .cell{padding:8px 10px;border-right:1px solid var(--line);flex:1;white-space:nowrap;overflow:hidden}
+  .mockup-result-row .cell:last-child{border-right:none}
+  .row-lv1{background:#e8f5e9}
+  .row-lv2{background:#fff8e1}
+  .row-lv4{background:#f5f5f5}
+
+  /* Footer */
+  footer{text-align:center;padding:32px 16px;font-size:12px;color:var(--soft);border-top:1px solid var(--line)}
+  footer a{color:var(--red);text-decoration:none}
+
+  @media(max-width:600px){
+    .mockup-row{grid-template-columns:1fr}
+    .hero{padding:40px 16px 36px}
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <h1>活動價格<span>檢查工具</span></h1>
+  <p>活動上線前，批次確認賣家是否完成預約變價，取代逐一進儀表板手動核對的流程。</p>
+
+</div>
+
+<div class="container">
+
+  <!-- Pain point -->
+  <div class="pain">
+    <h2>這工具解決了什麼問題</h2>
+    <p>活動上線前，Planner 需要逐一切換到每個賣家的儀表板，輸入 PID 確認是否完成預約變價、價格與時間是否符合入稿需求。賣家數量一多，這個流程非常耗時。此工具讓你一次貼入所有 SHOP ID、PID 和入稿價格，自動批次比對，幾秒內看到每筆的符合狀態。</p>
+    <p style="margin-top:8px;font-size:13px;color:#888">⚠️ 此工具目前僅查詢<b>賣家自設的行銷活動</b>，蝦皮平台直接設定的變價暫不涵蓋，列為下次優化目標。</p>
+  </div>
+
+  <!-- 安裝 -->
+  <div class="section">
+    <div class="section-label">Step 1</div>
+    <h2>安裝書籤（只需一次）</h2>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>開啟 Chrome 書籤管理頁</h3>
+          <p>點下方連結開啟書籤管理頁，在空白處<b>右鍵 → 新增書籤</b>，名稱填：<code>🔍 活動價格檢查</code></p>
+          <p style="margin-top:8px"><a href="chrome://bookmarks/" style="color:var(--red);font-weight:700">→ 開啟 chrome://bookmarks/</a></p>
+          <div class="tip">💡 也可以直接對書籤列空白處右鍵 → 新增書籤。</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>複製以下程式碼貼入「網址」欄</h3>
+          <p>把下方整段複製，貼進書籤的「網址」欄位，按儲存。</p>
+          <div class="code-block">
+            <code>javascript:(function(){var s=document.createElement('script');s.src='https://kkes5013486-ming.github.io/shopee-tools/campaign_price_checker.js?t='+Date.now();document.head.appendChild(s);})();</code>
+          </div>
+          <div class="tip">💡 書籤的「網址」欄開頭應該是 <code>javascript:(function</code>，不是 https://</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>確認書籤出現在書籤列</h3>
+          <p>儲存後書籤列應出現「🔍 活動價格檢查」，安裝完成。之後不需要重複安裝，工具更新時書籤自動拿到最新版。</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 使用 -->
+  <div class="section">
+    <div class="section-label">Step 2</div>
+    <h2>每次使用流程</h2>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>開啟後台，點書籤啟動工具</h3>
+          <p>先登入並開啟 <a href="https://admin.promotion.shopee.tw/sd-seller-discount-overview" style="color:var(--red)">admin.promotion.shopee.tw/sd-seller-discount-overview</a>，再點書籤列的「🔍 活動價格檢查」，工具視窗會彈出。</p>
+          <div class="warn">⚠️ 必須在 admin.promotion.shopee.tw 頁面點書籤才有效，在其他網頁點沒有作用。</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>從入稿表分三次複製貼入</h3>
+          <p>在入稿表篩選自己負責的賣家後，分別複製三欄貼進工具對應的欄位。</p>
+          <div class="tip" style="margin-top:10px">
+            💡 <b>避免三欄行數不一致：</b>
+            在入稿表篩選 PIC 為自己的名字，再對 SID、PID、活動價三欄分別篩選並<b>取消勾選空白格</b>，確保三欄都有值，複製出來的行數就會一致。
+          </div>
+          <div class="mockup" style="margin-top:12px">
+            <div class="mockup-row">
+              <div>
+                <label>① SHOP ID</label>
+                <textarea class="mockup-ta" readonly>140031773
+140031774
+140031775</textarea>
+              </div>
+              <div>
+                <label>② PID 商品編號</label>
+                <textarea class="mockup-ta" readonly>57750115690
+57650137603
+57506337641</textarea>
+              </div>
+              <div>
+                <label>③ 入稿價格</label>
+                <textarea class="mockup-ta" readonly>88
+120
+99</textarea>
+              </div>
+            </div>
+            <p style="font-size:12px;color:#888;margin-top:4px">每行一個，三欄行數必須相同，第 N 行對應同一筆入稿資料。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>輸入活動時間區間</h3>
+          <p>填入活動開始日與結束日。查詢單一日期時，開始日與結束日填同一天即可。</p>
+          <div class="mockup" style="margin-top:10px">
+            <div class="mockup-dates">
+              <span style="font-size:13px;color:var(--mid)">活動開始日</span>
+              <input class="mockup-date-input" type="text" value="2026-08-15" readonly>
+              <span style="font-size:13px;color:var(--mid)">～ 活動結束日</span>
+              <input class="mockup-date-input" type="text" value="2026-08-17" readonly>
+            </div>
+            <div class="tip" style="margin:0">💡 賣家只要活動區間與查詢區間有<b>任何重疊</b>就算符合。例如賣家設 8/12～8/31，查詢 8/15，視為符合。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>按「開始查詢」，等待結果</h3>
+          <p>工具會逐筆查詢，進度條即時顯示。查詢完成後結果顯示在下方表格，可點「展開」看每個 MID 的詳細比對結果。</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 符合等級 -->
+  <div class="section">
+    <div class="section-label">查詢結果</div>
+    <h2>符合等級說明</h2>
+    <div style="display:flex;flex-direction:column;gap:10px;margin:16px 0">
+      <div style="display:flex;align-items:flex-start;gap:14px;background:#e8f5e9;border-radius:10px;padding:14px 16px">
+        <div style="font-size:22px;line-height:1;flex-shrink:0">🟢</div>
+        <div>
+          <div style="font-weight:700;color:#168038;margin-bottom:3px">完全符合</div>
+          <div style="font-size:13px;color:#444">所有規格（MID）的活動價 = 入稿價，且時間區間涵蓋活動。無需處理。</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:14px;background:#fff8e1;border-radius:10px;padding:14px 16px">
+        <div style="font-size:22px;line-height:1;flex-shrink:0">🟡</div>
+        <div>
+          <div style="font-weight:700;color:#f0a500;margin-bottom:3px">部分符合</div>
+          <div style="font-size:13px;color:#444">部分規格符合，部分不符合。點「展開」確認哪些 MID 有問題，通知賣家補設。</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:14px;background:#ffebee;border-radius:10px;padding:14px 16px">
+        <div style="font-size:22px;line-height:1;flex-shrink:0">🔴</div>
+        <div>
+          <div style="font-weight:700;color:#d93025;margin-bottom:3px">完全不符合</div>
+          <div style="font-size:13px;color:#444">找到活動但所有 MID 的活動價都與入稿價不符。通知賣家重新設定活動價格。</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:14px;background:#f5f5f5;border-radius:10px;padding:14px 16px">
+        <div style="font-size:22px;line-height:1;flex-shrink:0">⚫</div>
+        <div>
+          <div style="font-weight:700;color:#555;margin-bottom:3px">未設定</div>
+          <div style="font-size:13px;color:#444">在指定時間內查無包含此 PID 的行銷活動。通知賣家設定預約變價，或人工確認是否已直接調整原價。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result mockup -->
+    <div class="mockup-result">
+      <div class="mockup-result-row header">
+        <div class="cell">展開</div>
+        <div class="cell">SHOP ID</div>
+        <div class="cell">PID</div>
+        <div class="cell">入稿價</div>
+        <div class="cell">符合等級</div>
+        <div class="cell">活動名稱</div>
+      </div>
+      <div class="mockup-result-row row-lv1">
+        <div class="cell">▶</div>
+        <div class="cell">140031773</div>
+        <div class="cell">57750115690</div>
+        <div class="cell">NT$ 88</div>
+        <div class="cell"><span class="lv1">🟢 完全符合</span></div>
+        <div class="cell">到8月底</div>
+      </div>
+      <div class="mockup-result-row row-lv2">
+        <div class="cell">▶</div>
+        <div class="cell">140031774</div>
+        <div class="cell">57650137603</div>
+        <div class="cell">NT$ 120</div>
+        <div class="cell"><span class="lv2">🟡 部分符合</span></div>
+        <div class="cell">8月活動</div>
+      </div>
+      <div class="mockup-result-row row-lv4">
+        <div class="cell">▶</div>
+        <div class="cell">140031775</div>
+        <div class="cell">57506337641</div>
+        <div class="cell">NT$ 99</div>
+        <div class="cell"><span class="lv4">⚫ 未設定</span></div>
+        <div class="cell">查無此PID的活動</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 下載 -->
+  <div class="section">
+    <div class="section-label">匯出</div>
+    <h2>下載 CSV 報表</h2>
+    <p style="color:var(--mid);font-size:14px;margin-bottom:12px">查詢完成後可下載兩種報表：</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num" style="background:#555">📄</div>
+        <div class="step-content">
+          <h3>下載 CSV</h3>
+          <p>每筆 PID 一列，包含 SHOP ID、PID、商品名稱、入稿價、符合等級、活動名稱與時間。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background:#555">📋</div>
+        <div class="step-content">
+          <h3>下載 MID 明細 CSV</h3>
+          <p>展開到每個 MID 層級，顯示各規格的原價、活動價、入稿價與是否符合，適合需要細查特定商品的情況。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section">
+    <div class="section-label">常見問題</div>
+    <h2>FAQ</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num" style="background:var(--bg);color:var(--soft);border:1px solid var(--line)">Q</div>
+        <div class="step-content">
+          <h3>點書籤沒有反應？</h3>
+          <p>確認目前開啟的頁面是 <code>admin.promotion.shopee.tw</code>。書籤只能在這個後台使用，在其他頁面點沒有效果。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background:var(--bg);color:var(--soft);border:1px solid var(--line)">Q</div>
+        <div class="step-content">
+          <h3>三欄行數不一致怎麼辦？</h3>
+          <p>工具會顯示錯誤提示並告知各欄行數。請確認 SHOP ID、PID、活動價格三欄的資料筆數完全相同，第 N 行對應同一筆。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background:var(--bg);color:var(--soft);border:1px solid var(--line)">Q</div>
+        <div class="step-content">
+          <h3>查詢速度慢？</h3>
+          <p>每筆資料需要呼叫兩次後台 API，賣家有很多活動或商品時會較慢。建議一次不要超過 20 筆，分批查詢。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background:var(--bg);color:var(--soft);border:1px solid var(--line)">Q</div>
+        <div class="step-content">
+          <h3>⚫ 未設定但賣家說他有設好？</h3>
+          <p>此工具只能抓取有設定<b>行銷活動</b>的商品。若你同意賣家直接改原價等於入稿價，工具會顯示「⚫ 未設定」，這種情況請肉眼辨識，不屬於異常。</p>
+          <p style="margin-top:6px;color:var(--soft);font-size:13px">若確認賣家有設定行銷活動卻還是顯示未設定，可能是活動時間與查詢區間不重疊，或 PID 對不上，請請賣家截圖確認。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  活動價格檢查工具 · 由 <a href="mailto:ming.chan@shopee.com">ming.chan@shopee.com</a> 製作
+</footer>
+
+</body>
+</html>
