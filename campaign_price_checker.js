@@ -19,6 +19,7 @@ function track(action){
     const d=new URLSearchParams();
     d.append("entry.2001185629","campaign_price_checker");
     d.append("entry.1835367255",action);
+    d.append("entry.145005153",u);
     navigator.sendBeacon?navigator.sendBeacon(TF,d):fetch(TF,{method:"POST",mode:"no-cors",body:d});
   }catch(_){}
 }
