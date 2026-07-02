@@ -1,4 +1,4 @@
-javascript:(async function(){
+(async function(){
 // ============================================================
 // 活動價格檢查工具 campaign_price_checker
 // 製作：ming.chan@shopee.com
@@ -11,20 +11,19 @@ if(document.getElementById("cpc_modal")){
 }
 
 // ── 使用率統計 ──────────────────────────────────────────────
-const TF="https://docs.google.com/forms/d/e/1FAIpQLSenw_qzGd_M8q5FEwRCa_NrpiTWudJ5z-pqFuFRLTwCIF9h9Q/formResponse";
-const TE="entry.1092243828", TU="entry.1238342509";
-function track(action, success, errMsg){
+const TF="https://docs.google.com/forms/d/e/1FAIpQLSff11O98fFS7P0SFWpvkuBaMlLns_CPEkMpz43KcB-_lTrDuA/formResponse";
+function track(action){
   try{
     let u=localStorage.cpc_uid;
     if(!u){u=(crypto.randomUUID?crypto.randomUUID():Date.now()+"_"+Math.random());localStorage.cpc_uid=u;}
     const d=new URLSearchParams();
-    d.append(TE, JSON.stringify({tool:"活動價格檢查工具",code:"campaign_price_checker",user:u,action,success,errMsg:errMsg||""}));
-    d.append(TU, u);
+    d.append("entry.1835367255","campaign_price_checker");
+    d.append("entry.145005153",action);
     navigator.sendBeacon?navigator.sendBeacon(TF,d):fetch(TF,{method:"POST",mode:"no-cors",body:d});
   }catch(_){}
 }
-if(!localStorage.cpc_first){track("first_use",true);localStorage.cpc_first="1";}
-track("open",true);
+if(!localStorage.cpc_first){track("first_use");localStorage.cpc_first="1";}
+track("open");
 
 // ── 樣式 ────────────────────────────────────────────────────
 const css=document.createElement("style");
@@ -231,7 +230,7 @@ document.getElementById("cpc_btn").onclick=async()=>{
   const queryEnd=new Date(endDate).getTime()/1000+86399; // 結束日含當天
 
   document.getElementById("cpc_btn").disabled=true;
-  track("query_start",true);
+  track("query_start");
 
   try{
     for(let i=0;i<sids.length;i++){
@@ -310,11 +309,11 @@ document.getElementById("cpc_btn").onclick=async()=>{
 
     renderTable();
     setStatus(`✅ 查詢完成｜共 ${resultRows.length} 筆`,100);
-    track("query_done",true);
+    track("query_done");
 
   }catch(e){
     setStatus("❌ 錯誤："+e.message,null);
-    track("query_error",false,e.message);
+    track("query_error");
     console.error(e);
   }finally{
     document.getElementById("cpc_btn").disabled=false;
@@ -392,7 +391,7 @@ document.getElementById("dl_csv").onclick=()=>{
   const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
   a.download="campaign_price_check.csv";a.click();
-  track("download_csv",true);
+  track("download_csv");
 };
 
 document.getElementById("dl_detail_csv").onclick=()=>{
@@ -414,7 +413,7 @@ document.getElementById("dl_detail_csv").onclick=()=>{
   const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
   a.download="campaign_price_check_detail.csv";a.click();
-  track("download_detail_csv",true);
+  track("download_detail_csv");
 };
 
 })();
