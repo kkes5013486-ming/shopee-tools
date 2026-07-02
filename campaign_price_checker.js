@@ -17,9 +17,8 @@ function track(action){
     let u=localStorage.cpc_uid;
     if(!u){u=(crypto.randomUUID?crypto.randomUUID():Date.now()+"_"+Math.random());localStorage.cpc_uid=u;}
     const d=new URLSearchParams();
-    d.append("entry.145005153","campaign_price_checker");
-    d.append("entry.1835367255",action);
-    d.append("entry.2001185629",u);
+    d.append("entry.2001185629","campaign_price_checker");
+    d.append("entry.145005153",action);
     navigator.sendBeacon?navigator.sendBeacon(TF,d):fetch(TF,{method:"POST",mode:"no-cors",body:d});
   }catch(_){}
 }
@@ -231,7 +230,7 @@ document.getElementById("cpc_btn").onclick=async()=>{
   const queryEnd=new Date(endDate).getTime()/1000+86399; // 結束日含當天
 
   document.getElementById("cpc_btn").disabled=true;
-  track("query_start");
+  track("open");
 
   try{
     for(let i=0;i<sids.length;i++){
@@ -310,11 +309,11 @@ document.getElementById("cpc_btn").onclick=async()=>{
 
     renderTable();
     setStatus(`✅ 查詢完成｜共 ${resultRows.length} 筆`,100);
-    track("query_done");
+    track("open");
 
   }catch(e){
     setStatus("❌ 錯誤："+e.message,null);
-    track("query_error");
+    track("open");
     console.error(e);
   }finally{
     document.getElementById("cpc_btn").disabled=false;
@@ -392,7 +391,7 @@ document.getElementById("dl_csv").onclick=()=>{
   const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
   a.download="campaign_price_check.csv";a.click();
-  track("download_csv");
+  track("open");
 };
 
 document.getElementById("dl_detail_csv").onclick=()=>{
@@ -414,7 +413,7 @@ document.getElementById("dl_detail_csv").onclick=()=>{
   const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
   a.download="campaign_price_check_detail.csv";a.click();
-  track("download_detail_csv");
+  track("open");
 };
 
 })();
