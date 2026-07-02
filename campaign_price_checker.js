@@ -231,8 +231,6 @@ document.getElementById("cpc_btn").onclick=async()=>{
   const queryEnd=new Date(endDate).getTime()/1000+86399; // 結束日含當天
 
   document.getElementById("cpc_btn").disabled=true;
-  track("open");
-
   try{
     for(let i=0;i<sids.length;i++){
       const shopId=sids[i];
@@ -310,11 +308,8 @@ document.getElementById("cpc_btn").onclick=async()=>{
 
     renderTable();
     setStatus(`✅ 查詢完成｜共 ${resultRows.length} 筆`,100);
-    track("open");
-
   }catch(e){
     setStatus("❌ 錯誤："+e.message,null);
-    track("open");
     console.error(e);
   }finally{
     document.getElementById("cpc_btn").disabled=false;
@@ -392,7 +387,6 @@ document.getElementById("dl_csv").onclick=()=>{
   const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
   a.download="campaign_price_check.csv";a.click();
-  track("open");
 };
 
 document.getElementById("dl_detail_csv").onclick=()=>{
@@ -414,7 +408,6 @@ document.getElementById("dl_detail_csv").onclick=()=>{
   const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
   a.download="campaign_price_check_detail.csv";a.click();
-  track("open");
 };
 
 })();
